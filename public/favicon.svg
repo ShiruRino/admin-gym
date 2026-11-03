@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="100%" height="100%">
+  <defs>
+    <!-- Mask untuk plat bagian dalam (dipotong oleh plat bagian tengah) -->
+    <mask id="mask-inner">
+      <rect width="100%" height="100%" fill="white" />
+      <ellipse cx="165" cy="150" rx="20" ry="65" fill="none" stroke="black" stroke-width="8" />
+      <ellipse cx="435" cy="150" rx="20" ry="65" fill="none" stroke="black" stroke-width="8" />
+    </mask>
+
+    <!-- Mask untuk plat bagian tengah (dipotong oleh plat bagian luar) -->
+    <mask id="mask-middle">
+      <rect width="100%" height="100%" fill="white" />
+      <ellipse cx="138" cy="150" rx="14" ry="48" fill="none" stroke="black" stroke-width="8" />
+      <ellipse cx="462" cy="150" rx="14" ry="48" fill="none" stroke="black" stroke-width="8" />
+    </mask>
+  </defs>
+
+  <!-- Garis Tengah Detak Jantung (EKG) -->
+  <path d="M 190 150
+           L 235 150
+           L 255 70
+           L 275 215
+           L 300 135
+           L 325 215
+           L 345 70
+           L 365 150
+           L 410 150" fill="none" stroke="#FE3218" stroke-width="16" stroke-linejoin="miter" stroke-miterlimit="10" />
+
+  <!-- Ujung Besi Barbel (Kiri dan Kanan) -->
+  <polygon points="130,146 130,154 50,150" fill="#FE3218" />
+  <polygon points="470,146 470,154 550,150" fill="#FE3218" />
+
+  <!-- Plat Beban Dalam (Paling Besar, Paling Belakang) -->
+  <g mask="url(#mask-inner)" fill="#FE3218">
+    <ellipse cx="200" cy="150" rx="26" ry="85" />
+    <ellipse cx="400" cy="150" rx="26" ry="85" />
+  </g>
+
+  <!-- Plat Beban Tengah (Sedang) -->
+  <g mask="url(#mask-middle)" fill="#FE3218">
+    <ellipse cx="165" cy="150" rx="20" ry="65" />
+    <ellipse cx="435" cy="150" rx="20" ry="65" />
+  </g>
+
+  <!-- Plat Beban Luar (Paling Kecil, Paling Depan) -->
+  <g fill="#FE3218">
+    <ellipse cx="138" cy="150" rx="14" ry="48" />
+    <ellipse cx="462" cy="150" rx="14" ry="48" />
+  </g>
+</svg>

@@ -1,0 +1,867 @@
+{
+    "openapi": "3.1.2",
+    "info": {
+        "title": "GymHub Member Native API Reference",
+        "version": "1.0.0",
+        "description": "Dokumentasi REST API resmi untuk integrasi Aplikasi Native Member Gym (Android & iOS). Menggunakan otentikasi Bearer Token Laravel Sanctum."
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api"
+        }
+    ],
+    "security": [
+        {
+            "http": []
+        }
+    ],
+    "paths": {
+        "/v1/auth/login": {
+            "post": {
+                "operationId": "auth.login",
+                "description": "Autentikasi akun member menggunakan nomor handphone atau email dan PIN/password. Menghasilkan Bearer token Laravel Sanctum untuk mengakses seluruh endpoint privat member.",
+                "summary": "Login Member Native",
+                "tags": [
+                    "Autentikasi Member",
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                },
+                "security": []
+            }
+        },
+        "/v1/auth/register": {
+            "post": {
+                "operationId": "auth.register",
+                "description": "Mendaftarkan akun member baru secara mandiri dari aplikasi mobile. Sistem akan membuat kode member unik otomatis (format GYM-YYMM-XXXX), mengirimkan rincian akun ke email, dan mengembalikan Bearer token Sanctum.",
+                "summary": "Registrasi Mandiri Member Baru",
+                "tags": [
+                    "Autentikasi Member",
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 201
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                },
+                "security": []
+            }
+        },
+        "/v1/auth/forgot-password": {
+            "post": {
+                "operationId": "auth.forgotPassword",
+                "description": "Mengirimkan password sementara baru ke email akun member yang terdaftar. Member kemudian dapat login menggunakan password sementara tersebut dan mengubahnya di menu profil.",
+                "summary": "Lupa Password Member",
+                "tags": [
+                    "Autentikasi Member",
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ForgotPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                },
+                "security": []
+            }
+        },
+        "/v1/auth/logout": {
+            "post": {
+                "operationId": "auth.logout",
+                "description": "Mencabut dan menghapus Bearer token sesi yang sedang digunakan oleh member.",
+                "summary": "Logout Member",
+                "tags": [
+                    "Autentikasi Member",
+                    "Auth"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/member/profile": {
+            "get": {
+                "operationId": "member.profile",
+                "description": "Mengambil informasi lengkap biodata member yang sedang login, termasuk status keanggotaan saat ini.",
+                "summary": "Profil Member",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            },
+            "put": {
+                "operationId": "member.updateProfile",
+                "description": "Mengubah data kontak, alamat domisili, atau catatan kebugaran pribadi member.",
+                "summary": "Perbarui Profil Mandiri",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProfileRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/v1/member/photo": {
+            "post": {
+                "operationId": "member.updatePhoto",
+                "description": "Mengunggah foto profil baru member (maksimal 2MB). Foto lama akan dihapus otomatis dari storage.",
+                "summary": "Unggah / Ganti Foto Profil Member",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePhotoRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "member.deletePhoto",
+                "description": "Menghapus foto profil yang saat ini digunakan member dan mengembalikannya ke avatar default.",
+                "summary": "Hapus Foto Profil Member",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/member/password": {
+            "put": {
+                "operationId": "member.changePassword",
+                "description": "Mengubah password atau PIN akses akun member native dengan memvalidasi password lama terlebih dahulu.",
+                "summary": "Ganti Password / PIN Member",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangePasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/v1/member/card": {
+            "get": {
+                "operationId": "member.card",
+                "description": "Mengambil payload kode QR dan informasi ringkas kartu anggota untuk ditampilkan di layar smartphone saat melakukan check-in di terminal resepsionis gym.",
+                "summary": "Kartu Member & QR Code Digital",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/member/subscription": {
+            "get": {
+                "operationId": "member.subscription",
+                "description": "Mengambil rincian paket langganan aktif, tanggal berlaku, dan sisa hari sebelum kedaluwarsa.",
+                "summary": "Informasi Paket Membership Langganan",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/v1/member/pt-sessions": {
+            "get": {
+                "operationId": "member.ptSessions",
+                "description": "Mengambil total kuota sesi PT akumulatif yang dimiliki member, kuota terpakai, sisa sesi, dan riwayat 10 sesi latihan terakhir bersama pelatih (trainer).",
+                "summary": "Saldo Kuota Sesi Personal Trainer (PT)",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Batas maksimal jumlah riwayat sesi latihan terbaru yang ditampilkan.",
+                        "schema": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "default": 10,
+                            "minimum": 1,
+                            "maximum": 50
+                        },
+                        "example": 10
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/v1/member/attendances": {
+            "get": {
+                "operationId": "member.attendances",
+                "description": "Menampilkan riwayat tanggal dan jam check-in kehadiran member di gym secara paginated.",
+                "summary": "Riwayat Presensi / Kunjungan Check-in",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Nomor halaman paginasi (mulai dari 1).",
+                        "schema": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "minimum": 1
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Jumlah riwayat presensi yang ditampilkan per halaman.",
+                        "schema": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "default": 15,
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "example": 15
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/v1/member/invoices": {
+            "get": {
+                "operationId": "member.invoices",
+                "description": "Menampilkan histori transaksi pembelian paket membership dan sesi PT beserta status lunas dan metode pembayaran.",
+                "summary": "Riwayat Pembayaran & Tagihan (Invoices)",
+                "tags": [
+                    "Data & Layanan Member",
+                    "Member"
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Nomor halaman paginasi (mulai dari 1).",
+                        "schema": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "minimum": 1
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Jumlah riwayat tagihan/transaksi yang ditampilkan per halaman.",
+                        "schema": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "default": 15,
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "example": 15
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "const": 200
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/AuthenticationException"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "http": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "ChangePasswordRequest": {
+                "type": "object",
+                "properties": {
+                    "current_password": {
+                        "type": "string",
+                        "description": "Password atau PIN lama member yang saat ini aktif.",
+                        "examples": [
+                            "password"
+                        ]
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "description": "Password atau PIN baru yang diinginkan (minimal 6 karakter).",
+                        "examples": [
+                            "rahasia123"
+                        ],
+                        "minLength": 6
+                    },
+                    "new_password_confirmation": {
+                        "type": "string",
+                        "description": "Konfirmasi password atau PIN baru (harus sama persis dengan new_password).",
+                        "examples": [
+                            "rahasia123"
+                        ],
+                        "minLength": 6
+                    }
+                },
+                "required": [
+                    "current_password",
+                    "new_password",
+                    "new_password_confirmation"
+                ],
+                "title": "ChangePasswordRequest"
+            },
+            "ForgotPasswordRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Alamat email member terdaftar untuk menerima password sementara baru.",
+                        "examples": [
+                            "budi@gmail.com"
+                        ]
+                    }
+                },
+                "required": [
+                    "email"
+                ],
+                "title": "ForgotPasswordRequest"
+            },
+            "LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "phone": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Nomor handphone atau email akun member yang terdaftar di sistem.",
+                        "examples": [
+                            "081234567890"
+                        ]
+                    },
+                    "email": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Alamat email member (opsional jika nomor handphone telah diisi).",
+                        "examples": [
+                            "member@gymhub.test"
+                        ]
+                    },
+                    "login": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Nomor handphone atau email member (field alternatif).",
+                        "examples": [
+                            "081234567890"
+                        ]
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "PIN atau password akun member.",
+                        "examples": [
+                            "password"
+                        ]
+                    }
+                },
+                "required": [
+                    "password"
+                ],
+                "title": "LoginRequest"
+            },
+            "RegisterRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Nama lengkap calon member sesuai kartu identitas.",
+                        "examples": [
+                            "Budi Santoso"
+                        ],
+                        "minLength": 2,
+                        "maxLength": 150
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Alamat email aktif untuk menerima konfirmasi akun dan notifikasi password.",
+                        "examples": [
+                            "budi@gmail.com"
+                        ],
+                        "maxLength": 150
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "Nomor handphone / WhatsApp aktif yang belum pernah terdaftar.",
+                        "examples": [
+                            "081234567890"
+                        ],
+                        "minLength": 8,
+                        "maxLength": 20
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Password akun member (minimal 6 karakter).",
+                        "examples": [
+                            "secret123"
+                        ],
+                        "minLength": 6
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "description": "Konfirmasi password yang sama dengan field password.",
+                        "examples": [
+                            "secret123"
+                        ],
+                        "minLength": 6
+                    },
+                    "gender": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Jenis kelamin calon member ('male' atau 'female').",
+                        "enum": [
+                            "male",
+                            "female",
+                            null
+                        ],
+                        "examples": [
+                            "male"
+                        ]
+                    },
+                    "birth_date": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Tanggal lahir calon member (format YYYY-MM-DD).",
+                        "examples": [
+                            "1998-05-20"
+                        ]
+                    },
+                    "address": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Alamat domisili calon member.",
+                        "examples": [
+                            "Jl. Sudirman No. 45, Jakarta Selatan"
+                        ],
+                        "maxLength": 500
+                    },
+                    "emergency_contact": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Nomor kontak darurat keluarga / kerabat.",
+                        "examples": [
+                            "081987654321"
+                        ],
+                        "maxLength": 25
+                    }
+                },
+                "required": [
+                    "name",
+                    "email",
+                    "phone",
+                    "password",
+                    "password_confirmation"
+                ],
+                "title": "RegisterRequest"
+            },
+            "UpdatePhotoRequest": {
+                "type": "object",
+                "properties": {
+                    "photo": {
+                        "type": "string",
+                        "format": "binary",
+                        "contentMediaType": "application/octet-stream",
+                        "description": "File foto profil member (format: jpeg, jpg, png, webp, maks 2MB)."
+                    }
+                },
+                "required": [
+                    "photo"
+                ],
+                "title": "UpdatePhotoRequest"
+            },
+            "UpdateProfileRequest": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Alamat tempat tinggal / domisili member saat ini.",
+                        "examples": [
+                            "Jl. Melati No. 12, Jakarta Selatan"
+                        ],
+                        "maxLength": 500
+                    },
+                    "emergency_contact": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Nomor kontak darurat keluarga atau kerabat terdekat.",
+                        "examples": [
+                            "Ibu Siti - 081298765432"
+                        ],
+                        "maxLength": 255
+                    },
+                    "notes": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Catatan riwayat medis atau target kebugaran pribadi member.",
+                        "examples": [
+                            "Riwayat cedera lutut kiri, fokus penurunan berat badan"
+                        ],
+                        "maxLength": 1000
+                    }
+                },
+                "title": "UpdateProfileRequest"
+            }
+        },
+        "responses": {
+            "ValidationException": {
+                "description": "Validation error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "description": "Errors overview."
+                                },
+                                "errors": {
+                                    "type": "object",
+                                    "description": "A detailed description of each field that failed validation.",
+                                    "additionalProperties": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "required": [
+                                "message",
+                                "errors"
+                            ]
+                        }
+                    }
+                }
+            },
+            "AuthenticationException": {
+                "description": "Unauthenticated",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "description": "Error overview."
+                                }
+                            },
+                            "required": [
+                                "message"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
