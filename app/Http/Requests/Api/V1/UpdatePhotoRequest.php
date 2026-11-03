@@ -44,4 +44,3 @@ class UpdatePhotoRequest extends FormRequest
         ];
     }
 }
-

@@ -1,6 +1,5 @@
 <?php
 
-use App\Livewire\Auth\MemberRegister;
 use App\Livewire\CheckIn\Index as CheckInIndex;
 use App\Livewire\Dashboard\Index as DashboardIndex;
 use App\Livewire\Invoices\Index as InvoicesIndex;
@@ -15,9 +14,6 @@ Route::get('/', function () {
         ? redirect()->route('check-in.index')
         : redirect()->route('login');
 })->name('home');
-
-// Pendaftaran mandiri member gym
-Route::get('join', MemberRegister::class)->name('member.register');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Frontdesk Terminal

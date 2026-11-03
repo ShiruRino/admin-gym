@@ -54,12 +54,5 @@
             <span>{{ __('Don\'t have an account?') }}</span>
             <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
         </div>
-
-        <div class="pt-2 text-center text-xs text-zinc-500 border-t border-zinc-200 dark:border-zinc-800">
-            <span>Calon Member Gym Baru?</span>
-            <flux:link :href="route('member.register')" class="font-medium text-amber-600 dark:text-amber-400 ml-1" wire:navigate>
-                Daftar Mandiri di Sini
-            </flux:link>
-        </div>
     </div>
 </x-layouts::auth>
